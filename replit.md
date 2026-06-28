@@ -1,44 +1,51 @@
-# [Project name]
+# Mystique Compass
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A cosmic numerology and astrology profile generator. Users enter a name or search Wikipedia for a celebrity/historical figure and get a full numerological reading including life path, psychomatrix, Lo Shu grid, Chinese zodiac, personal year charts, and more.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/mystique run dev` — run the frontend (Vite, port 24479)
+- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
+- Frontend: React 19 + Vite + Tailwind CSS 4 (cosmic dark theme)
 - API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- Validation: Zod
+- Charts: Chart.js + react-chartjs-2, Recharts
+- PDF export: jsPDF
+- 3D: Three.js
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/mystique/src/` — React frontend (components, pages, numerology logic)
+- `artifacts/mystique/src/lib/numerology/` — all numerology calculation engines
+- `artifacts/mystique/src/lib/zodiac/` — Chinese zodiac data
+- `artifacts/api-server/src/routes/biography.ts` — Wikipedia biography lookup (returns birth data + `wikipediaUrl`)
+- `artifacts/api-server/src/routes/index.ts` — API router mounting
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- All numerology calculations run client-side (no DB needed)
+- Wikipedia is fetched server-side through the `/api/biography` endpoint to avoid CORS issues
+- Biography response includes `wikipediaUrl` field pointing to the full Wikipedia article
+- PWA-ready: includes service worker, manifest, and install prompt
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
-
-## User preferences
-
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Search any name or Wikipedia article to auto-fill birth data
+- Full numerological profile: life path, destiny, soul urge, psychomatrix, Lo Shu grid
+- Chinese zodiac analysis per animal sign
+- Personal year charts and temporal predictions
+- PDF export of the full reading
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- `artifacts/mystique` requires `PORT` and `BASE_PATH` env vars at build time (provided by Replit workflows automatically)
+- The biography route fetches from Wikipedia's public API; titles with special characters are URL-encoded
 
 ## Pointers
 

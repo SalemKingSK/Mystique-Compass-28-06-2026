@@ -1,0 +1,7 @@
+$ vite --config vite.config.ts --host 0.0.0.0
+
+  VITE v7.3.5  ready in 418 ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: http://169.254.0.21:3000/
+[BABEL] Note: The code generator has deoptimised the styling of /home/ubuntu/mystique-compass/Mystique-Compass/artifacts/mystique/src/components/profile-generator/results-display.tsx as it exceeds the max of 500KB.

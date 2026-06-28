@@ -1,0 +1,205 @@
+import { AnimalData, RelationshipData, CategoryMeta, PersonalYearInfo, TaiSuiData } from './types';
+
+export const ANIMALS: AnimalData[] = [
+  { n: 'Rat', e: '🐀', br: 'Zi (⼦)', el: 'Water', pl: 'yang', i: 0 },
+  { n: 'Ox', e: '🐂', br: 'Chou (丑)', el: 'Earth', pl: 'yin', i: 1 },
+  { n: 'Tiger', e: '🐅', br: 'Yin (寅)', el: 'Wood', pl: 'yang', i: 2 },
+  { n: 'Rabbit', e: '🐇', br: 'Mao (卯)', el: 'Wood', pl: 'yin', i: 3 },
+  { n: 'Dragon', e: '🐉', br: 'Chen (⾠)', el: 'Earth', pl: 'yang', i: 4 },
+  { n: 'Snake', e: '🐍', br: 'Si (⺒)', el: 'Fire', pl: 'yin', i: 5 },
+  { n: 'Horse', e: '🐎', br: 'Wu (午)', el: 'Fire', pl: 'yang', i: 6 },
+  { n: 'Goat', e: '🐐', br: 'Wei (未)', el: 'Earth', pl: 'yin', i: 7 },
+  { n: 'Monkey', e: '🐒', br: 'Shen (申)', el: 'Metal', pl: 'yang', i: 8 },
+  { n: 'Rooster', e: '🐓', br: 'You (⾣)', el: 'Metal', pl: 'yin', i: 9 },
+  { n: 'Dog', e: '🐕', br: 'Xu (戌)', el: 'Earth', pl: 'yang', i: 10 },
+  { n: 'Pig', e: '🐖', br: 'Hai (亥)', el: 'Water', pl: 'yin', i: 11 },
+];
+
+export const RELATIONS: Record<string, RelationshipData> = {
+  Rat: { clash: 'Horse', harm: 'Goat', destroy: 'Rooster', self: 'Rat', sanhe: ['Dragon', 'Monkey'], liuhe: 'Ox' },
+  Ox: { clash: 'Goat', harm: 'Horse', destroy: 'Dragon', self: 'Ox', sanhe: ['Snake', 'Rooster'], liuhe: 'Rat' },
+  Tiger: { clash: 'Monkey', harm: 'Snake', destroy: 'Pig', self: 'Tiger', sanhe: ['Horse', 'Dog'], liuhe: 'Pig' },
+  Rabbit: { clash: 'Rooster', harm: 'Dragon', destroy: 'Horse', self: 'Rabbit', sanhe: ['Goat', 'Pig'], liuhe: 'Dog' },
+  Dragon: { clash: 'Dog', harm: 'Rabbit', destroy: 'Ox', self: 'Dragon', sanhe: ['Rat', 'Monkey'], liuhe: 'Rooster' },
+  Snake: { clash: 'Pig', harm: 'Tiger', destroy: 'Monkey', self: 'Snake', sanhe: ['Ox', 'Rooster'], liuhe: 'Monkey' },
+  Horse: { clash: 'Rat', harm: 'Ox', destroy: 'Rabbit', self: 'Horse', sanhe: ['Tiger', 'Dog'], liuhe: 'Goat' },
+  Goat: { clash: 'Ox', harm: 'Rat', destroy: 'Dog', self: 'Goat', sanhe: ['Rabbit', 'Pig'], liuhe: 'Horse' },
+  Monkey: { clash: 'Tiger', harm: 'Pig', destroy: 'Snake', self: 'Monkey', sanhe: ['Rat', 'Dragon'], liuhe: 'Snake' },
+  Rooster: { clash: 'Rabbit', harm: 'Dog', destroy: 'Rat', self: 'Rooster', sanhe: ['Snake', 'Ox'], liuhe: 'Dragon' },
+  Dog: { clash: 'Dragon', harm: 'Rooster', destroy: 'Goat', self: 'Dog', sanhe: ['Tiger', 'Horse'], liuhe: 'Rabbit' },
+  Pig: { clash: 'Snake', harm: 'Monkey', destroy: 'Tiger', self: 'Pig', sanhe: ['Rabbit', 'Goat'], liuhe: 'Tiger' },
+};
+
+export const CAT_META: Record<string, CategoryMeta> = {
+  self: { label: 'Ben Ming Nian', badge: 'bg-blue-500/20 text-blue-400 border-blue-500/30', col: '#60a5fa', sev: 3, ages: [12, 24, 36, 48, 60, 72, 84] },
+  clash: { label: 'Direct Clash', badge: 'bg-red-500/20 text-red-400 border-red-500/30', col: '#f87171', sev: 4, ages: [6, 18, 30, 42, 54, 66, 78, 90] },
+  harm: { label: 'Harm', badge: 'bg-amber-500/20 text-amber-400 border-amber-500/30', col: '#fbbf24', sev: 2, ages: [7, 19, 31, 43, 55, 67, 79, 91] },
+  destroy: { label: 'Destruction', badge: 'bg-violet-500/20 text-violet-400 border-violet-500/30', col: '#a78bfa', sev: 1, ages: [9, 21, 33, 45, 57, 69, 81, 93] },
+  sanhe: { label: 'San He Alliance', badge: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', col: '#34d399', sev: -1, ages: [4, 8, 16, 20, 28, 32, 40, 44, 52, 56, 64, 68, 76, 80, 88] },
+  liuhe: { label: 'Liu He Alliance', badge: 'bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/30', col: '#e040fb', sev: -2, ages: [1, 13, 25, 37, 49, 61, 73, 85] },
+  neutral: { label: 'Neutral', badge: 'bg-gray-500/20 text-gray-400 border-gray-500/30', col: '#9ca3af', sev: 0, ages: [] },
+};
+
+export const PERSONAL_YEARS: PersonalYearInfo[] = [
+  {
+    n: 1,
+    name: 'New Beginnings',
+    season: 'Spring — Seed Planting',
+    vedic: 'Sun (Surya)',
+    loshu: 'North · Water · Career',
+    t: false,
+    opportunity: 'Launch projects with multi-year potential. Make decisive career moves. Establish clear personal boundaries. Implement physical vitality practices.',
+    challenge: 'Self-focus can tip into isolation. Enthusiasm may produce overcommitment.',
+    spirit: 'Courage means acting with awareness of uncertainty rather than waiting for its resolution.',
+    desc: "Year 1 — The seed year. The nine-year cycle resets. Whatever you initiate now carries influence across the following eight years. Independence, bold initiative, and self-determination are essential — passivity wastes the single most potent planting window of the cycle. Claim your authority over your own direction."
+  },
+  {
+    n: 2,
+    name: 'Partnership & Patience',
+    season: 'Late Spring — Germination',
+    vedic: 'Moon (Chandra)',
+    loshu: 'Southwest · Earth · Relationships',
+    t: false,
+    opportunity: 'Deepen or newly form romantic and professional partnerships. Develop diplomatic skill.',
+    challenge: 'Indecision when multiple perspectives seem equally valid. Over-sensitivity.',
+    spirit: 'Surrender to timing not self-determined. Active receptivity.',
+    desc: "Year 2 — The cooperation year. Push and the year fragments; wait, cooperate, and gather — and it compounds. Emotional sensitivity is heightened, making you both more empathic and more vulnerable to perceived slights. Diplomacy is not weakness here — it is the specific intelligence the year rewards."
+  },
+  {
+    n: 3,
+    name: 'Expression & Joy',
+    season: 'Early Summer — Blossoming',
+    vedic: 'Jupiter (Guru)',
+    loshu: 'East · Wood · Family & Health',
+    t: false,
+    opportunity: 'Launch creative projects. Expand social networks. Develop communication skills.',
+    challenge: 'Scattered energy and superficiality are the primary traps.',
+    spirit: 'Creative expression as genuine self-disclosure — purpose made visible.',
+    desc: "Year 3 — The creative year. Ideas flow, social connections multiply, and communication becomes your primary instrument. Share your gifts publicly. Creative projects begun now often become defining works of the cycle. Guard against scattered energy and superficiality — focus the creative abundance on meaningful work."
+  },
+  {
+    n: 4,
+    name: 'Foundation & Work',
+    season: 'Midsummer — Fruit-Setting',
+    vedic: 'Rahu (North Node)',
+    loshu: 'Southeast · Wood · Wealth & Prosperity',
+    t: true,
+    opportunity: 'Build permanent foundations that will carry Years 5–9. Master financial management.',
+    challenge: 'May feel invisible, restricted, and unrewarded.',
+    spirit: 'Acceptance of necessary limitation as a creative force.',
+    desc: "Year 4 — First Trough. The cycle's most internally pressured period. You may feel invisible, restricted, unrewarded. This is by design — the year constructs permanent foundation for what follows. Abandoning structures in PY 4 creates losses requiring multiple subsequent years to recover. The grind is the gift."
+  },
+  {
+    n: 5,
+    name: 'Freedom & Change',
+    season: 'Late Summer — Harvest Preparation',
+    vedic: 'Mercury (Budha)',
+    loshu: 'Centre · Earth · Stability & Balance',
+    t: false,
+    opportunity: 'Welcome unexpected opportunities. Travel, career shifts, experimental learning.',
+    challenge: 'Clinging to Year 4 structures creates dangerous friction.',
+    spirit: 'Freedom as purposeful movement rather than mere escape.',
+    desc: "Year 5 — Liberation and flux. Dynamic shifts, travel, and freedom arrive suddenly. Opportunities appear and expire fast — adaptability is a requirement. Clinging to PY 4's structures creates dangerous friction. The year rewards those who move with its chaotic energy."
+  },
+  {
+    n: 6,
+    name: 'Responsibility',
+    season: 'Early Autumn — Abundance Sharing',
+    vedic: 'Venus (Shukra)',
+    loshu: 'Northwest · Metal · Helpful People',
+    t: false,
+    opportunity: 'Deepen commitments in relationships. Beautify home. Serve family and community.',
+    challenge: 'Guard against martyrdom — giving so much that the capacity for sustained service collapses.',
+    spirit: 'Love in its practical form — showing up, making repairs, investing in what lasts.',
+    desc: "Year 6 — Home and service. The universe calls for nurturing and commitment to family, community, and those who depend on you. Beauty and harmony can be restored in troubled relationships. Guard against martyrdom — give generously but maintain the capacity for sustained service."
+  },
+  {
+    n: 7,
+    name: 'Inner Retreat',
+    season: 'Mid-Autumn — Inward Turning',
+    vedic: 'Ketu (South Node)',
+    loshu: 'West · Metal · Children & Creativity',
+    t: true,
+    opportunity: 'Deep research, study, spiritual practice, and genuine inner work.',
+    challenge: 'Forcing external results creates compounding frustration.',
+    spirit: 'What do you actually know about yourself, as distinct from what you perform?',
+    desc: "Year 7 — Second Trough. The cycle's inward-turning. External ambitions yield little. Introspection, spiritual seeking, research, and deep analysis are what the year supports. Forcing external action creates compounding frustration. Use withdrawal for genuine inner work — you emerge in Year 8 with capabilities external action could never have produced."
+  },
+  {
+    n: 8,
+    name: 'Material Power',
+    season: 'Late Autumn — Final Harvest',
+    vedic: 'Saturn (Shani)',
+    loshu: 'Northeast · Earth · Knowledge & Self-Cultivation',
+    t: false,
+    opportunity: 'Convert sustained effort into tangible results — financial achievement, recognition.',
+    challenge: 'Confidence can tip into arrogance and overreach.',
+    spirit: 'Authority earned rather than claimed.',
+    desc: "Year 8 — The material peak. Sustained effort of seven years can now convert into tangible results — financial achievement, professional authority, recognition. Guard against arrogance and overreach: the very confidence that makes Year 8 productive can generate decisions so outsized they damage what they were meant to build."
+  },
+  {
+    n: 9,
+    name: 'Completion & Release',
+    season: 'Winter Solstice — Seed Return',
+    vedic: 'Mars (Mangal)',
+    loshu: 'South · Fire · Fame & Recognition',
+    t: false,
+    opportunity: 'Integrate and harvest the entire nine-year cycle. Release what has run its course.',
+    challenge: 'Clinging to what must go — people, habits, identities, projects.',
+    spirit: 'The return of the seed to soil, carrying everything that was learned back into potential.',
+    desc: "Year 9 — The great releasing. Simultaneously ending and beginning. Release what no longer serves: relationships, habits, beliefs, identities. This releasing is not optional — the universe accomplishes it one way or another. Those who cling experience loss; those who release deliberately experience liberation and perfect preparation for Year 1."
+  },
+];
+
+export const STEMS = ['Metal', 'Metal', 'Water', 'Water', 'Wood', 'Wood', 'Fire', 'Fire', 'Earth', 'Earth'];
+export const SNAMES = ['Geng', 'Xin', 'Ren', 'Gui', 'Jia', 'Yi', 'Bing', 'Ding', 'Wu', 'Ji'];
+
+export const TAISUI: Record<number, TaiSuiData> = {
+  2025: { cy: 'Yisi 乙巳', gn: 'Xu Shan 许山将军', note: 'Wood Snake · strategic patience, hidden cultivation' },
+  2026: { cy: 'Bingwu 丙午', gn: 'Wen Zhe 文哲将军', note: 'Fire Horse · maximum Yang Fire, peak clash for Rats' },
+  2027: { cy: 'Dingwei 丁未', gn: 'Miao Bing 缪丙将军', note: 'Fire Goat · Ding Fire intensifies Wei Earth absorption' },
+  2028: { cy: 'Wushen 戊申', gn: 'Peng Tai 彭泰将军', note: 'Earth Monkey · stable foundation for technical innovation' },
+  2029: { cy: 'Jiyou 己酉', gn: 'Cheng Bao 程宝将军', note: 'Earth Rooster · Ben Ming Nian for Roosters, San He for Snakes & Oxen' },
+  2030: { cy: 'Gengxu 庚戌', gn: 'Ni Mi 倪秘将军', note: 'Metal Dog · structural consolidation, San He for Tigers' },
+  2031: { cy: 'Xinhai 辛亥', gn: 'Ye Jian 叶坚将军', note: 'Metal Pig · San He for Rabbits & Goats' },
+  2032: { cy: 'Renzi 壬子', gn: 'Qiu De 丘德将军', note: 'Water Rat · doubled Water, Ben Ming Nian for Rats' },
+  2033: { cy: 'Guichou 癸丑', gn: 'Lin Jian 林坚将军', note: 'Water Ox · Ben Ming Nian for Oxen, Liu He for Rats' },
+  2034: { cy: 'Jiayin 甲寅', gn: 'Zhang Ci 章词将军', note: 'Wood Tiger · Ben Ming Nian for Tigers' },
+};
+
+export const LIFESTAGES: Record<number, string> = {
+  1: 'Liu He — celestial partner arrives',
+  6: 'First Direct Clash — transformation begins',
+  7: 'First Harm — discernment develops',
+  8: 'San He I — first alliance support',
+  9: 'First Destruction — structure tested',
+  12: 'Ben Ming Nian I — adolescence',
+  13: 'Liu He — meaningful partnership window',
+  16: 'San He II — capabilities expand',
+  18: 'Second Clash — career confrontation',
+  19: 'Second Harm — professional vigilance',
+  20: 'San He III — ambitious expansion',
+  21: 'Second Destruction — foundations stress-tested',
+  24: 'Ben Ming Nian II — emerging adulthood',
+  25: 'Liu He — transformative partnership',
+  28: 'San He IV — peak alliance window',
+  30: 'Third Clash — midcareer reckoning',
+  31: 'Third Harm — hidden adversaries',
+  32: 'San He V — consolidated growth',
+  33: 'Third Destruction — structural clearing',
+  36: 'Ben Ming Nian III — career consolidation',
+  37: 'Liu He — deepening commitment',
+  40: 'San He VI — achievement peak',
+  42: 'Fourth Clash — authority confrontation',
+  43: 'Fourth Harm — trust system tested',
+  44: 'San He VII — reinforcement',
+  45: 'Fourth Destruction — legacy structures reviewed',
+  48: 'Ben Ming Nian IV — mature reassessment',
+  49: 'Liu He — wisdom partnership',
+  52: 'San He VIII — legacy building',
+  54: 'Fifth Clash — transition catalyst',
+  55: 'Fifth Harm — discernment matures',
+  60: 'Ben Ming Nian V — retirement transition',
+  72: 'Ben Ming Nian VI — wisdom integration',
+  84: 'Ben Ming Nian VII — elder status',
+};

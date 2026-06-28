@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Mystique Compass"
+version = "1.0.0"
+id = "artifacts/mystique"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24479
+
+[services.development]
+run = "pnpm --filter @workspace/mystique run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/mystique", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/mystique/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24479"
+BASE_PATH = "/"
