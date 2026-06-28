@@ -1,3 +1,43 @@
 $ node --enable-source-maps ./dist/index.mjs
 [19:25:52.212] [32mINFO[39m (2114): [36mServer listening[39m
     [35mport[39m: 5000
+[19:34:27.929] [32mINFO[39m (2114): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/biography"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 602
+[19:34:31.794] [32mINFO[39m (2114): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "GET",
+      "url": "/api/biography"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 256
+[19:34:39.270] [32mINFO[39m (2114): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "GET",
+      "url": "/api/biography"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 344
+[19:34:50.382] [32mINFO[39m (2114): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "GET",
+      "url": "/api/biography"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 439
