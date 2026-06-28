@@ -6,6 +6,7 @@ import { detectContradictions } from '@/lib/numerology/synthesis/contradiction-e
 import { generateRecommendations } from '@/lib/numerology/synthesis/recommendation-engine';
 import { detectDominanceHierarchy } from '@/lib/numerology/synthesis/dominance-hierarchy-engine';
 import { getDomainNarrative, ALL_DOMAIN_BANKS } from '@/lib/numerology/synthesis/life-domain-narrative-banks';
+import { computeSynthesis } from '@/lib/numerology/synthesis';
 
 interface PdfExportButtonProps {
   insight: AstroInsightOutput;
@@ -91,8 +92,7 @@ async function generatePdf(insight: AstroInsightOutput, numerology: NumerologyDa
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(size);
     doc.setTextColor(color[0], color[1], color[2]);
-    const t = text.slice(0, maxChars);
-    y = addWrappedText(doc, t, margin + 3, y, contentW - 6, size * 0.55);
+    y = addWrappedText(doc, text, margin + 3, y, contentW - 6, size * 0.55);
     y += 2;
   }
 
@@ -198,7 +198,7 @@ async function generatePdf(insight: AstroInsightOutput, numerology: NumerologyDa
     doc.setFont('helvetica', 'bold'); doc.setFontSize(8);
     doc.setTextColor(GOLD[0], GOLD[1], GOLD[2]);
     doc.text(numerology.psychicMeaning.title, margin + 3, y); y += 5;
-    bodyText(numerology.psychicMeaning.description.slice(0, 800));
+    bodyText(numerology.psychicMeaning.description);
   }
 
   // ── Destiny Number ──────────────────────────────────────────────────────────
@@ -209,7 +209,7 @@ async function generatePdf(insight: AstroInsightOutput, numerology: NumerologyDa
     doc.setFont('helvetica', 'bold'); doc.setFontSize(8);
     doc.setTextColor(GOLD[0], GOLD[1], GOLD[2]);
     doc.text(numerology.destinyMeaning.title, margin + 3, y); y += 5;
-    bodyText(numerology.destinyMeaning.description.slice(0, 800));
+    bodyText(numerology.destinyMeaning.description);
   }
 
   // ── Lo Shu Grid ─────────────────────────────────────────────────────────────
@@ -267,8 +267,7 @@ async function generatePdf(insight: AstroInsightOutput, numerology: NumerologyDa
       doc.text(`${arrow.name}  [${arrow.numbers.join('-')}]`, margin + 4, y + 5.5);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(6.5);
       doc.setTextColor(SILVER[0], SILVER[1], SILVER[2]);
-      const desc = doc.splitTextToSize(arrow.description.slice(0, 220), contentW - 8);
-      doc.text(desc[0] || '', margin + 4, y + 11);
+      y = addWrappedText(doc, arrow.description, margin + 4, y + 11, contentW - 8, 3.5);
       y += 18;
     });
   }
@@ -290,40 +289,33 @@ async function generatePdf(insight: AstroInsightOutput, numerology: NumerologyDa
       doc.text(`${arrow.name}  [${arrow.numbers.join('-')}]`, margin + 4, y + 5.5);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(6.5);
       doc.setTextColor(SILVER[0], SILVER[1], SILVER[2]);
-      const desc = doc.splitTextToSize(arrow.description.slice(0, 220), contentW - 8);
-      doc.text(desc[0] || '', margin + 4, y + 11);
+      y = addWrappedText(doc, arrow.description, margin + 4, y + 11, contentW - 8, 3.5);
       y += 18;
     });
   }
 
   // ── Personal Year Forecast ───────────────────────────────────────────────────
-  const pyears = (numerology.personalYears || []).slice(0, 10);
+  const pyears = (numerology.personalYears || []);
   if (pyears.length > 0) {
     ensurePage(50);
     y = sectionHeader(doc, '✦  Personal Year Forecast', y, margin, pageW);
     y += 2;
-    const colW = (contentW - 2) / 5;
-    pyears.forEach((py, i) => {
-      ensurePage(24);
-      const col = i % 5, row2 = Math.floor(i / 5);
-      const px = margin + col * (colW + 0.5), py2 = y + row2 * 24;
+    pyears.forEach((py) => {
+      ensurePage(15);
       const isCurrent = new Date().getFullYear() === py.year;
       doc.setFillColor(isCurrent ? 28 : 14, isCurrent ? 18 : 8, isCurrent ? 68 : 40);
-      doc.roundedRect(px, py2, colW, 22, 1.5, 1.5, 'F');
+      doc.roundedRect(margin, y, contentW, 12, 1.5, 1.5, 'F');
       doc.setDrawColor(isCurrent ? GOLD[0] : GOLD_DIM[0], isCurrent ? GOLD[1] : GOLD_DIM[1], isCurrent ? GOLD[2] : GOLD_DIM[2]);
       doc.setLineWidth(isCurrent ? 0.45 : 0.2);
-      doc.roundedRect(px, py2, colW, 22, 1.5, 1.5, 'S');
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(6.5);
-      doc.setTextColor(isCurrent ? GOLD[0] : SILVER_DIM[0], isCurrent ? GOLD[1] : SILVER_DIM[1], isCurrent ? GOLD[2] : SILVER_DIM[2]);
-      doc.text(String(py.year), px + colW / 2, py2 + 5, { align: 'center' });
-      doc.setFontSize(13); doc.setTextColor(GOLD[0], GOLD[1], GOLD[2]);
-      doc.text(String(py.pyn), px + colW / 2, py2 + 13, { align: 'center' });
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(5);
-      doc.setTextColor(SILVER_DIM[0], SILVER_DIM[1], SILVER_DIM[2]);
-      const mLines = doc.splitTextToSize(py.meaning.slice(0, 30), colW - 2);
-      doc.text(mLines[0] || '', px + colW / 2, py2 + 19, { align: 'center' });
+      doc.roundedRect(margin, y, contentW, 12, 1.5, 1.5, 'S');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8);
+      doc.setTextColor(isCurrent ? GOLD[0] : SILVER[0], isCurrent ? GOLD[1] : SILVER[1], isCurrent ? GOLD[2] : SILVER[2]);
+      doc.text(`${py.year} — Personal Year ${py.pyn}`, margin + 4, y + 5);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(6.5);
+      doc.setTextColor(SILVER[0], SILVER[1], SILVER[2]);
+      y = addWrappedText(doc, py.meaning, margin + 4, y + 9, contentW - 8, 3.5);
+      y += 5;
     });
-    y += Math.ceil(pyears.length / 5) * 24 + 4;
   }
 
   // ── Chinese Zodiac ───────────────────────────────────────────────────────────
@@ -331,7 +323,7 @@ async function generatePdf(insight: AstroInsightOutput, numerology: NumerologyDa
     ensurePage(40);
     y = sectionHeader(doc, `✦  ${insight.sign} — Chinese Zodiac Profile`, y, margin, pageW);
     y += 2;
-    bodyText(insight.signData.description.slice(0, 800));
+    bodyText(insight.signData.description);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -432,7 +424,7 @@ async function generatePdf(insight: AstroInsightOutput, numerology: NumerologyDa
       doc.setTextColor(dc[0], dc[1], dc[2]);
       doc.text(`${domainLabels[domain].toUpperCase()} — GRID-DERIVED READING`, margin + 5, y + 5.5);
       y += 12;
-      bodyText(combined.slice(0, 900), SILVER, 7);
+      bodyText(combined, SILVER, 7);
       y += 2;
     });
 
@@ -474,7 +466,7 @@ async function generatePdf(insight: AstroInsightOutput, numerology: NumerologyDa
         doc.setFont('helvetica', 'bold'); doc.setFontSize(6);
         doc.setTextColor(GOLD_DIM[0], GOLD_DIM[1], GOLD_DIM[2]);
         doc.text('DEEP READING:', margin + 3, y); y += 4;
-        bodyText(c.deepReading.slice(0, 700), SILVER, 7);
+        bodyText(c.deepReading, SILVER, 7);
 
         // resolution
         ensurePage(22);
@@ -486,7 +478,7 @@ async function generatePdf(insight: AstroInsightOutput, numerology: NumerologyDa
         doc.setTextColor(EMERALD[0], EMERALD[1], EMERALD[2]);
         doc.text('RESOLUTION PATH:', margin + 4, y + 3.5);
         y += 10;
-        bodyText(c.resolution.slice(0, 400), [180, 240, 210], 6.5);
+        bodyText(c.resolution, [180, 240, 210], 6.5);
         y += 4;
       });
     }
@@ -516,7 +508,7 @@ async function generatePdf(insight: AstroInsightOutput, numerology: NumerologyDa
         doc.text(r.gridBasis, margin + 5, y + 9);
         y += 13;
 
-        bodyText(r.text.slice(0, 600), SILVER, 7);
+        bodyText(r.text, SILVER, 7);
 
         // 30-day practice
         ensurePage(22);
@@ -528,8 +520,41 @@ async function generatePdf(insight: AstroInsightOutput, numerology: NumerologyDa
         doc.setTextColor(GOLD[0], GOLD[1], GOLD[2]);
         doc.text('30-DAY PRACTICE:', margin + 4, y + 4.5);
         y += 9;
-        bodyText(r.practice.slice(0, 400), [210, 185, 100], 6.5);
+        bodyText(r.practice, [210, 185, 100], 6.5);
         y += 3;
+      });
+    }
+
+    // ── Deep Synthesis ───────────────────────────────────────────────────────
+    const synthesis = computeSynthesis(numerology, insight);
+    if (synthesis) {
+      newPage();
+      y = sectionHeader(doc, '✦  Deep Synthesis Insights', y, margin, pageW);
+      y += 2;
+      
+      const sections = [
+        { title: 'Decan Interpretation', data: synthesis.decan?.interpretation },
+        { title: 'Double Animal', data: synthesis.doubleAnimal?.isDouble ? synthesis.doubleAnimal.interpretation : null },
+        { title: 'Sexagenary Analysis', data: synthesis.sexagenary?.interpretation },
+        { title: 'Heavenly Stem', data: synthesis.heavenlyStem?.interpretation },
+        { title: 'Earthly Branch', data: synthesis.earthlyBranch?.interpretation },
+        { title: 'Zodiac Relationships', data: synthesis.zodiacRelationships?.interpretation },
+        { title: 'Birth Day of Week', data: synthesis.birthDayOfWeek?.interpretation },
+        { title: 'Karmic Fate Null Meaning', data: synthesis.karmicFateNullMeaning },
+        { title: 'Compound Personalized Insight', data: synthesis.compoundPersonalizedInsight },
+        { title: 'Personal Year Customized', data: synthesis.personalYearCustomized },
+      ];
+
+      sections.forEach(s => {
+        if (s.data) {
+          ensurePage(30);
+          doc.setFont('helvetica', 'bold'); doc.setFontSize(8);
+          doc.setTextColor(GOLD[0], GOLD[1], GOLD[2]);
+          doc.text(s.title.toUpperCase(), margin + 3, y);
+          y += 5;
+          bodyText(s.data, SILVER, 7);
+          y += 4;
+        }
       });
     }
 
